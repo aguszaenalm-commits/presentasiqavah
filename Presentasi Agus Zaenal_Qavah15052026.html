@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100-Day HC Transformation Plan: Qavah Group</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            /* Brand Colors */
+            --primary: #0052CC;
+            --primary-dark: #0747A6;
+            --secondary: #00B8D9;
+            --accent: #FFAB00;
+            --accent-dark: #FF991F;
+            --success: #36B37E;
+            
+            /* Neutrals */
+            --bg-body: #DFE1E6;
+            --bg-slide: #F8F9FA;
+            --text-main: #172B4D;
+            --text-muted: #6B778C;
+            --border: #EBECF0;
+            --white: #FFFFFF;
+
+            /* Spacing & Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --header-height: 80px;
+        }
+
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; outline: none; }
+        
+        body {
+            background-color: var(--bg-body);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            overflow: hidden; /* Prevent body scroll, handle inside slides */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- SLIDE CONTAINER SYSTEM --- */
+        #presentation-app {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: var(--bg-slide);
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .slide-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-out;
+            transform: scale(0.98);
+            background-color: var(--bg-slide);
+        }
+
+        .slide-wrapper.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        /* Animation utility for elements inside slide */
+        .slide-content {
+            flex: 1;
+            padding: 40px 60px;
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out 0.2s;
+        }
+        
+        .active .slide-content { opacity: 1; transform: translateY(0); }
+
+        /* --- COMMON ELEMENTS --- */
+        .top-bar {
+            height: 6px;
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            flex-shrink: 0;
+        }
+
+        .slide-header {
+            padding: 30px 60px 10px;
+            flex-shrink: 0;
+        }
+
+        h1, h2, h3, h4, h5 { margin: 0; }
+        
+        .slide-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+        
+        .slide-title span { color: var(--text-main); font-weight: 400; }
+
+        /* --- SPECIFIC SLIDE STYLES --- */
+
+        /* Slide 1: Cover */
+        .slide-cover {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            justify-content: center;
+            padding: 80px;
+            text-align: left;
+        }
+        
+        .slide-cover .top-bar { background: rgba(255,255,255,0.2); }
+        .slide-cover h1 { color: white; font-size: 64px; line-height: 1.1; margin-bottom: 20px; }
+        .slide-cover .subtitle { font-size: 22px; opacity: 0.9; border-left: 5px solid var(--accent); padding-left: 20px; margin-bottom: 50px; }
+        .presenter-info { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 30px; }
+        .presenter-info h3 { font-size: 28px; }
+        .presenter-info p { color: var(--accent); font-weight: 600; letter-spacing: 1px; }
+
+        /* Slide 2: Mini Cards & Pillars */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius-md);
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            transition: transform 0.2s;
+        }
+        
+        .info-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.08); }
+        .info-card i { font-size: 24px; color: var(--primary); margin-top: 2px; }
+        .info-card h5 { font-size: 14px; font-weight: 700; margin-bottom: 5px; color: var(--text-main); }
+        .info-card p { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0; }
+
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .pillar-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 25px 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--border); transition: background 0.3s;
+        }
+        .pillar-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
+        
+        .pillar-1:hover::before { background: var(--primary); }
+        .pillar-2:hover::before { background: var(--secondary); }
+        .pillar-3:hover::before { background: var(--success); }
+        .pillar-4:hover::before { background: var(--accent); }
+
+        .icon-box {
+            width: 60px; height: 60px; border-radius: 50%;
+            margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: white;
+        }
+        .bg-p1 { background: var(--primary); box-shadow: 0 4px 10px rgba(0, 82, 204, 0.3); }
+        .bg-p2 { background: var(--secondary); box-shadow: 0 4px 10px rgba(0, 184, 217, 0.3); }
+        .bg-p3 { background: var(--success); box-shadow: 0 4px 10px rgba(54, 179, 126, 0.3); }
+        .bg-p4 { background: var(--accent); box-shadow: 0 4px 10px rgba(255, 171, 0, 0.3); }
+
+        .pillar-card h3 { font-size: 15px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; }
+        .pillar-card p { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0; }
+
+        /* Slide 3: Roadmap */
+        .roadmap-wrapper {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .roadmap-header {
+            display: grid;
+            grid-template-columns: 180px 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bg-body);
+        }
+
+        .phase-badge {
+            font-size: 11px; font-weight: 800; text-transform: uppercase;
+            padding: 8px; text-align: center; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .badge-1 { background: rgba(0, 82, 204, 0.1); color: var(--primary); }
+        .badge-2 { background: rgba(0, 184, 217, 0.1); color: var(--secondary); }
+        .badge-3 { background: rgba(255, 171, 0, 0.1); color: var(--accent); }
+
+        .swimlane-row {
+            display: grid;
+            grid-template-columns: 180px 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .lane-label {
+            font-size: 12px; font-weight: 700; color: var(--primary);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .gantt-container { height: 40px; display: flex; align-items: center; position: relative; background: #F4F5F7; border-radius: 6px; }
+        
+        .gantt-bar {
+            height: 32px; border-radius: 4px; display: flex; align-items: center;
+            padding: 0 10px; font-size: 10px; font-weight: 700; color: white;
+            position: absolute; white-space: nowrap; overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: width 1s ease-out; /* Animation on load */
+        }
+        .bg-fase1 { background: var(--primary); }
+        .bg-fase2 { background: var(--secondary); }
+        .bg-fase3 { background: var(--accent); color: var(--text-main); }
+
+        /* New Styles for Bottom Framework Icons */
+        .framework-row {
+            display: grid;
+            grid-template-columns: 180px 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .framework-col {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mini-pillar-icon {
+            font-size: 16px;
+            opacity: 0.4;
+            transition: all 0.3s;
+        }
+        
+        /* Hover effects for icons to make them active when looking at that phase */
+        .roadmap-wrapper:hover .mini-pillar-icon { opacity: 0.4; }
+        
+        .fw-fase1 { color: var(--primary); }
+        .fw-fase2 { color: var(--secondary); }
+        .fw-fase3 { color: var(--accent); }
+
+        /* Slide 4,5,6: Detail Phase */
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 40px;
+            height: 100%;
+        }
+
+        .task-list { list-style: none; padding: 0; margin: 0; }
+        .task-item {
+            background: white; border: 1px solid var(--border);
+            padding: 15px; border-radius: var(--radius-md);
+            margin-bottom: 12px; display: flex; gap: 15px; align-items: flex-start;
+            transition: all 0.2s;
+        }
+        .task-item:hover { border-color: var(--primary); transform: translateX(5px); }
+        .task-item i { color: var(--primary); font-size: 18px; margin-top: 3px; }
+        .task-text { font-size: 14px; color: var(--text-main); line-height: 1.5; }
+        .task-text strong { display: block; margin-bottom: 3px; color: var(--text-main); }
+
+        .impact-card {
+            border-radius: var(--radius-lg); padding: 40px 30px;
+            color: white; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .impact-value { font-size: 36px; font-weight: 800; margin-bottom: 5px; line-height: 1.1; }
+        .impact-label { font-size: 14px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .impact-body { font-size: 12px; opacity: 0.9; line-height: 1.5; margin: 0; }
+
+        /* Slide 7: Risk Mitigation (New Style) */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .risk-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--radius-md);
+            border-top: 5px solid #FF5630; /* Warning color */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .risk-card h4 { color: #FF5630; margin-bottom: 10px; font-size: 16px; display: flex; align-items: center; gap: 8px;}
+        .risk-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0 0 10px 0; }
+        .mitigation-box {
+            background: #FFF0EB;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #BF2600;
+        }
+        .mitigation-label { font-weight: 700; text-transform: uppercase; font-size: 10px; display: block; margin-bottom: 4px; }
+
+        /* Slide 8: KPI Table */
+        .kpi-table-wrapper { margin-top: 20px; }
+        .kpi-intro {
+            background: rgba(0, 82, 204, 0.05); border-left: 5px solid var(--primary);
+            padding: 20px; border-radius: var(--radius-sm); margin-bottom: 20px;
+        }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+        th { text-align: left; padding: 15px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+        td { background: white; padding: 18px 15px; border: 1px solid var(--border); border-top: none; border-bottom: none; font-size: 14px; }
+        td:first-child { border-left: 1px solid var(--border); border-radius: 8px 0 0 8px; font-weight: 600; color: var(--primary); }
+        td:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; text-align: right; }
+        
+        .kpi-tag {
+            background: rgba(54, 179, 126, 0.1); color: var(--success);
+            padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 12px;
+        }
+
+        .kpi-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .kpi-mini-card {
+            background: white; border: 1px dashed var(--secondary); padding: 20px;
+            border-radius: var(--radius-md); display: flex; align-items: center; gap: 20px;
+        }
+        .kmc-icon { font-size: 28px; color: var(--secondary); }
+
+        /* Slide 9: CTA */
+        .cta-wrapper {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            height: 100%; text-align: center;
+        }
+        .cta-box {
+            background: white; padding: 60px; border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08); max-width: 800px;
+        }
+        .btn-cta {
+            display: inline-block; background: var(--primary); color: white;
+            padding: 15px 40px; border-radius: 50px; font-weight: 700;
+            font-size: 16px; margin-top: 20px; transition: transform 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+        .btn-cta:hover { background: var(--primary-dark); transform: scale(1.05); }
+
+        /* --- FOOTER & NAVIGATION --- */
+        .slide-footer {
+            padding: 15px 60px; display: flex; justify-content: space-between;
+            font-size: 11px; font-weight: 600; color: var(--text-muted);
+            border-top: 1px solid var(--border); background: white; flex-shrink: 0;
+        }
+
+        .nav-controls {
+            position: fixed; bottom: 30px; right: 40px; display: flex; gap: 15px;
+            z-index: 100; background: rgba(255,255,255,0.9); padding: 10px 15px;
+            border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn {
+            width: 40px; height: 40px; border-radius: 50%; border: none;
+            background: transparent; color: var(--text-main); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: var(--primary); color: white; }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .slide-indicator {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--text-main); color: white; padding: 8px 20px;
+            border-radius: 20px; font-size: 12px; font-weight: 700; z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .analysis-grid, .pillars-grid, .detail-layout, .kpi-cards, .risk-grid { grid-template-columns: 1fr; }
+            .roadmap-header, .swimlane-row, .framework-row { grid-template-columns: 1fr; gap: 5px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+            .gantt-container { width: 100%; height: 30px; margin-bottom: 8px; }
+            .phase-badge { width: 100%; text-align: left; }
+            h1 { font-size: 40px; }
+            .slide-content { padding: 20px; }
+            .slide-header { padding: 20px 20px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="presentation-app">
+
+    <!-- SLIDE 1: COVER -->
+    <div class="slide-wrapper active slide-cover">
+        <div class="top-bar"></div>
+        <div class="slide-content" style="display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 80px;">
+            <div style="text-transform: uppercase; letter-spacing: 4px; font-weight: 700; color: var(--accent); margin-bottom: 20px;">Eksekutif Qavah Group</div>
+            <h1>100-Day HC<br>Transformation Plan</h1>
+            <p class="subtitle">Membangun Fondasi Tata Kelola & Disiplin Eksekusi</p>
+            
+            <div class="presenter-info">
+                <p style="font-size: 14px; opacity: 0.7; margin-bottom: 5px; text-transform: uppercase;">Disusun Oleh:</p>
+                <h3>AGUS ZAENAL</h3>
+                <p>Candidate: Head of HRGA Holding</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: STRATEGIC CONTEXT -->
+    <div class="slide-wrapper">
+        <div class="top-bar"></div>
+        <div class="slide-header">
+            <h2 class="slide-title">Konteks Strategis <span>& Analisa Situasi</span></h2>
+        </div>
+        <div class="slide-content">
+            <div class="analysis-grid">
+                <!-- Kartu 1: Terkait Turnover -->
+                <div class="info-card">
+                    <i class="fa-solid fa-user-xmark"></i>
+                    <div>
+                        <h5>Tingkat Turnover Karyawan</h5>
+                        <p>Angka turnover masih relatif tinggi di beberapa area operasional. Perlu strategi retensi cepat untuk menjaga keberlangsungan bisnis.</p>
+                    </div>
+                </div>
+                
+                <!-- Kartu 2: Terkait Integrasi -->
+                <div class="info-card">
+                    <i class="fa-solid fa-people-arrows"></i>
+                    <div>
+                        <h5>Integrasi & Harmonisasi</h5>
+                        <p>Proses integrasi antar entitas dan harmonisasi kerja lintas fungsi masih berjalan. Perlu penguatan koordinasi agar Holding terasa sebagai satu kesatuan.</p>
+                    </div>
+                </div>
+                
+                <!-- Kartu 3: Terkait Tata Kelola & Budaya -->
+                <div class="info-card">
+                    <i class="fa-solid fa-gavel"></i>
+                    <div>
+                        <h5>Penguatan Tata Kelola & Budaya</h5>
+                        <p>Implementasi sistem kerja dan tata kelola masih dalam tahap penguatan. Fokus utama saat ini adalah menanamkan budaya disiplin organisasi.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h4 style="font-weight: 800; color: var(--text-main); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">
+                    Framework Transformasi: <span style="color: var(--primary);">"One Qavah" Excellence</span>
+                </h4>
+            </div>
+
+            <div class="pillars-grid">
+                <div class="pillar-card pillar-1">
+                    <div class="icon-box bg-p1"><i class="fa-solid fa-layer-group"></i></div>
+                    <h3>Standarisasi</h3>
+                    <p>Penyelarasan SOP, kebijakan HR, dan sistem kerja untuk bahasa yang sama.</p>
+                </div>
+                <div class="pillar-card pillar-2">
+                    <div class="icon-box bg-p2"><i class="fa-solid fa-bolt-lightning"></i></div>
+                    <h3>Agility</h3>
+                    <p>Struktur fleksibel dan pengambilan keputusan cepat lintas fungsi.</p>
+                </div>
+                <div class="pillar-card pillar-3">
+                    <div class="icon-box bg-p3"><i class="fa-solid fa-anchor"></i></div>
+                    <h3>Stabilisasi</h3>
+                    <p>Menekan turnover dan memperkuat hubungan industrial yang harmonis.</p>
+                </div>
+                <div class="pillar-card pillar-4">
+                    <div class="icon-box bg-p4"><i class="fa-solid fa-chess-knight"></i></div>
+                    <h3>Disiplin</h3>
+                    <p>Budaya akuntabilitas dan kepatuhan (DoA) untuk eksekusi presisi.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding: 15px; background: rgba(0, 82, 204, 0.04); border-radius: var(--radius-md); border: 1px dashed var(--primary); text-align: center;">
+                <p style="margin: 0; font-weight: 700; color: var(--primary); font-size: 14px;">
+                    <i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i>
+                    Output Akhir: Organisasi yang tangguh, efisien, dan siap mendukung pertumbuhan agresif Holding.
+                </p>
+            </div>
+        </div>
+        <div class="slide-footer"><span>Qavah Group Transformation Plan</span><span>AGUS ZAENAL - Head of HRGA Candidate</span></div>
+    </div>
+
+    <!-- SLIDE 3: ROADMAP (UPDATED WITH BOTTOM ICONS) -->
+    <div class="slide-wrapper">
+        <div class="top-bar"></div>
+        <div class="slide-header">
+            <h2 class="slide-title">100-Day <span>HC Transformation Roadmap</span></h2>
+        </div>
+        <div class="slide-content">
+            <div class="roadmap-wrapper">
+                <div class="roadmap-header">
+                    <div></div> <!-- Spacer for labels -->
+                    <div class="phase-badge badge-1">Fase 1: Foundation (1-30)</div>
+                    <div class="phase-badge badge-2">Fase 2: Governance (31-60)</div>
+                    <div class="phase-badge badge-3">Fase 3: Performance (61-90+)</div>
+                </div>
+
+                <!-- Lane 1 -->
+                <div class="swimlane-row">
+                    <div class="lane-label"><i class="fa-solid fa-sitemap"></i> Strategi & Org</div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase1" style="width: 100%;"><i class="fa-solid fa-magnifying-glass" style="margin-right:5px"></i> Audit & Mapping</div></div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase2" style="width: 100%; opacity: 0.9;"><i class="fa-solid fa-diagram-project" style="margin-right:5px"></i> Rollout Struktur</div></div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase3" style="width: 60%; margin-left: 20%;"><i class="fa-solid fa-users" style="margin-right:5px"></i> Culture Code</div></div>
+                </div>
+
+                <!-- Lane 2 -->
+                <div class="swimlane-row">
+                    <div class="lane-label"><i class="fa-solid fa-gavel"></i> Governance & GS</div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase1" style="width: 100%; opacity: 0.8;"><i class="fa-solid fa-shield-halved" style="margin-right:5px"></i> Legal Clean-up</div></div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase2" style="width: 100%;"><i class="fa-solid fa-file-contract" style="margin-right:5px"></i> Terbitnya SOP</div></div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase3" style="width: 50%;"><i class="fa-solid fa-user-lock" style="margin-right:5px"></i> Kontrol (DoA)</div></div>
+                </div>
+
+                <!-- Lane 3 -->
+                <div class="swimlane-row">
+                    <div class="lane-label"><i class="fa-solid fa-arrows-spin"></i> Integrasi & Ops</div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase1" style="width: 50%; margin-left: 50%; opacity: 0.8;"><i class="fa-solid fa-comments" style="margin-right:5px"></i> Work Rhythm</div></div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase2" style="width: 100%; opacity: 0.9;"><i class="fa-solid fa-gears" style="margin-right:5px"></i> Standardisasi GA</div></div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase3" style="width: 80%;"><i class="fa-solid fa-chart-pie" style="margin-right:5px"></i> HR Dashboard</div></div>
+                </div>
+
+                <!-- Lane 4 -->
+                <div class="swimlane-row">
+                    <div class="lane-label"><i class="fa-solid fa-user-group"></i> Talent & Stab.</div>
+                    <div class="gantt-container"></div> <!-- Empty Phase 1 -->
+                    <div class="gantt-container"><div class="gantt-bar bg-fase2" style="width: 80%; margin-left: 20%; opacity: 0.8;"><i class="fa-solid fa-user-check" style="margin-right:5px"></i> Decision Auth</div></div>
+                    <div class="gantt-container"><div class="gantt-bar bg-fase3" style="width: 100%;"><i class="fa-solid fa-star" style="margin-right:5px"></i> Retensi & KPI</div></div>
+                </div>
+
+                <!-- ADDED: Framework Icons Row -->
+                <div class="framework-row">
+                    <div class="framework-col"></div> <!-- Spacer -->
+                    
+                    <!-- Fase 1 Icons -->
+                    <div class="framework-col">
+                        <i class="fa-solid fa-layer-group mini-pillar-icon fw-fase1" title="Standarisasi"></i>
+                        <i class="fa-solid fa-bolt-lightning mini-pillar-icon fw-fase1" title="Agility"></i>
+                    </div>
+
+                    <!-- Fase 2 Icons -->
+                    <div class="framework-col">
+                        <i class="fa-solid fa-layer-group mini-pillar-icon fw-fase2" title="Standarisasi"></i>
+                        <i class="fa-solid fa-bolt-lightning mini-pillar-icon fw-fase2" title="Agility"></i>
+                        <i class="fa-solid fa-anchor mini-pillar-icon fw-fase2" title="Stabilisasi"></i>
+                    </div>
+
+                    <!-- Fase 3 Icons -->
+                    <div class="framework-col">
+                        <i class="fa-solid fa-layer-group mini-pillar-icon fw-fase3" title="Standarisasi"></i>
+                        <i class="fa-solid fa-bolt-lightning mini-pillar-icon fw-fase3" title="Agility"></i>
+                        <i class="fa-solid fa-anchor mini-pillar-icon fw-fase3" title="Stabilisasi"></i>
+                        <i class="fa-solid fa-chess-knight mini-pillar-icon fw-fase3" title="Disiplin"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="slide-footer"><span>Qavah Group Transformation Plan</span><span>AGUS ZAENAL - Head of HRGA Candidate</span></div>
+    </div>
+
+    <!-- SLIDE 4: FASE 1 -->
+    <div class="slide-wrapper">
+        <div class="top-bar"></div>
+        <div class="slide-header">
+            <h2 class="slide-title">Fase 1: <span>Foundation & Discovery (Hari 1-30)</span></h2>
+        </div>
+        <div class="slide-content">
+            <div class="detail-layout">
+                <ul class="task-list">
+                    <li class="task-item">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <div class="task-text"><strong>Audit & Gap Analysis:</strong> Deep-dive legal, payroll, & kompetensi untuk memetakan risiko compliance.</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div class="task-text"><strong>Legal Clean-up:</strong> Review Peraturan Perusahaan (PP) & validitas kontrak legal.</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                        <div class="task-text"><strong>Mapping Kompetensi:</strong> Identifikasi talent kunci vs surplus role sebagai dasar evaluasi performa.</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-comments"></i>
+                        <div class="task-text"><strong>Inisiasi Komunikasi:</strong> Menetapkan Work Rhythm (Weekly Sync) untuk memotong silo informasi.</div>
+                    </li>
+                </ul>
+                <!-- UPDATED WITH DESCRIPTION -->
+                <div class="impact-card" style="background: var(--primary);">
+                    <div class="impact-value">100% Workforce Visibility</div>
+                    <div class="impact-label">Validated HR & Compliance Baseline</div>
+                    <p class="impact-body">Laporan Audit & Legal terbit, Peta Kompetensi teridentifikasi, dan Data Karyawan tervalidasi.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer"><span>Qavah Group Transformation Plan</span><span>AGUS ZAENAL - Head of HRGA Candidate</span></div>
+    </div>
+
+    <!-- SLIDE 5: FASE 2 -->
+    <div class="slide-wrapper">
+        <div class="top-bar"></div>
+        <div class="slide-header">
+            <h2 class="slide-title">Fase 2: <span>Governance & Standardization (Hari 31-60)</span></h2>
+        </div>
+        <div class="slide-content">
+            <div class="detail-layout">
+                <ul class="task-list">
+                    <li class="task-item">
+                        <i class="fa-solid fa-diagram-project"></i>
+                        <div class="task-text"><strong>Rollout Struktur Baru:</strong> Implementasi Org Chart & Job Description (JD) yang disepakati direksi.</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-book-open"></i>
+                        <div class="task-text"><strong>Menerbitkan Employee Handbook:</strong> Launching Employee Handbook Qavah Group versi terpadu.</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-stamp"></i>
+                        <div class="task-text"><strong>Delegation of Authority:</strong> Implementasi matriks Decision Rights (Siapa menandatangani apa).</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-boxes-packing"></i>
+                        <div class="task-text"><strong>Standardisasi GA:</strong> Penetapan vendor & standar pelayanan GA untuk efisiensi cost.</div>
+                    </li>
+                </ul>
+                <!-- UPDATED WITH DESCRIPTION -->
+                <div class="impact-card" style="background: var(--secondary);">
+                    <div class="impact-value">Decision Flow Standardized</div>
+                    <div class="impact-label">Unified Governance Framework</div>
+                    <p class="impact-body">Struktur Organisasi terimplementasi, Employee Handbook & SOP HCGA berlaku, serta Delegasi Wewenang (DoA) terdokumentasi.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer"><span>Qavah Group Transformation Plan</span><span>AGUS ZAENAL - Head of HRGA Candidate</span></div>
+    </div>
+
+    <!-- SLIDE 6: FASE 3 -->
+    <div class="slide-wrapper">
+        <div class="top-bar"></div>
+        <div class="slide-header">
+            <h2 class="slide-title">Fase 3: <span>Performance & Sustainability (Hari 61-90+)</span></h2>
+        </div>
+        <div class="slide-content">
+            <div class="detail-layout">
+                <ul class="task-list">
+                    <li class="task-item">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <div class="task-text"><strong>Live HR Dashboard:</strong> Monitoring Headcount Cost, Turnover Rate, & Productivity real-time.</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-award"></i>
+                        <div class="task-text"><strong>Retensi & KPI:</strong> Penguatan sistem reward berbasis performa & program retensi talent.</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <div class="task-text"><strong>Talent Acquisition & Workforce Stability:</strong> Pemenuhan posisi strategis dan penguatan stabilitas organisasi untuk mendukung pertumbuhan bisnis.</div>
+                    </li>
+                    <li class="task-item">
+                        <i class="fa-solid fa-users-gear"></i>
+                        <div class="task-text"><strong>Budaya Eksekusi:</strong> Internalisasi nilai-nilai kedisiplinan & akuntabilitas tim.</div>
+                    </li>
+                </ul>
+                <!-- UPDATED WITH DESCRIPTION -->
+                <div class="impact-card" style="background: var(--accent); color: var(--text-main);">
+                    <div class="impact-value">Performance Culture Activated</div>
+                    <div class="impact-label">Execution & Accountability System</div>
+                    <p class="impact-body">HR Dashboard aktif, KPI Review berjalan, Critical Roles terisi, dan Budaya Disiplin diterapkan.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer"><span>Qavah Group Transformation Plan</span><span>AGUS ZAENAL - Head of HRGA Candidate</span></div>
+    </div>
+
+    <!-- SLIDE 7: MITIGASI RISIKO -->
+    <div class="slide-wrapper">
+        <div class="top-bar"></div>
+        <div class="slide-header">
+            <h2 class="slide-title">Mitigasi Risiko <span>& Manajemen Perubahan</span></h2>
+        </div>
+        <div class="slide-content">
+            <div style="margin-bottom: 20px; color: var(--text-muted);">
+                <p>Transformasi 100 hari pasti menghadapi hambatan. Berikut adalah strategi antisipasi yang disiapkan untuk memastikan keberhasilan eksekusi.</p>
+            </div>
+
+            <div class="risk-grid">
+                <div class="risk-card">
+                    <h4><i class="fa-solid fa-person-walking-arrow-right"></i> Resistensi Perubahan</h4>
+                    <p>Karyawan mungkin menolak struktur baru atau perubahan SOP.</p>
+                    <div class="mitigation-box">
+                        <span class="mitigation-label">Mitigasi:</span>
+                        Transparency Plan & Townhall Meeting sebelum rollover. Komunikasi dua arah intensif.
+                    </div>
+                </div>
+                <div class="risk-card">
+                    <h4><i class="fa-solid fa-user-slash"></i> Kurangnya Talent Internal</h4>
+                    <p>Mungkin tidak ada kandidat internal yang memenuhi kompetensi baru.</p>
+                    <div class="mitigation-box">
+                        <span class="mitigation-label">Mitigasi:</span>
+                        Fast-Track Hiring untuk posisi teknis sambil Upskilling tim existing melalui training.
+                    </div>
+                </div>
+                <div class="risk-card">
+                    <h4><i class="fa-solid fa-triangle-exclamation"></i> Kesalahan Data Historis</h4>
+                    <p>Data payroll/absensi di masa lalu mungkin tidak rapi (messy).</p>
+                    <div class="mitigation-box">
+                        <span class="mitigation-label">Mitigasi:</span>
+                        Periode "Data Cleansing" intensif di 30 hari pertama sebelum sistem baru jalan.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer"><span>Qavah Group Transformation Plan</span><span>AGUS ZAENAL - Head of HRGA Candidate</span></div>
+    </div>
+
+    <!-- SLIDE 8: KPI -->
+    <div class="slide-wrapper">
+        <div class="top-bar"></div>
+        <div class="slide-header">
+            <h2 class="slide-title">Strategic KPI <span>& Business Impact</span></h2>
+        </div>
+        <div class="slide-content">
+            <div class="kpi-intro">
+                <p style="margin: 0; font-size: 14px; font-weight: 600; color: var(--text-main);">
+                    <i class="fa-solid fa-quote-left" style="color: var(--primary); margin-right: 8px;"></i>
+                    HR tidak hanya mengelola administrasi, tetapi menjadi penggerak efisiensi dan pertumbuhan bisnis melalui metrik yang terukur.
+                </p>
+            </div>
+
+            <div class="kpi-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dimensi Fokus</th>
+                            <th>Indikator Keberhasilan (KPI)</th>
+                            <th>Target 100 Hari</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i class="fa-solid fa-database" style="margin-right: 10px;"></i> Organizational Metrics</td>
+                            <td>Akurasi Data Karyawan & Payroll (Holding & BU)</td>
+                            <td><span class="kpi-tag">&gt; 85%</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fa-solid fa-file-circle-check" style="margin-right: 10px;"></i> Governance Compliance</td>
+                            <td>Standarisasi SOP HRGA & Penyelarasan PP</td>
+                            <td><span class="kpi-tag">&gt; 80%</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fa-solid fa-gauge-high" style="margin-right: 10px;"></i> Operational Agility</td>
+                            <td>SLA Approval Proses HR (Rec, Promo, Exp)</td>
+                            <td><span class="kpi-tag" style="color: var(--primary); background: rgba(0,82,204,0.1)">Fast 30%</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fa-solid fa-user-tie" style="margin-right: 10px;"></i> Talent Readiness</td>
+                            <td>Pemenuhan Posisi Kritis (Critical Roles)</td>
+                            <td><span class="kpi-tag">&gt; 75%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="kpi-cards">
+                <div class="kpi-mini-card">
+                    <div class="kmc-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    <div>
+                        <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Cost Optimization</div>
+                        <div style="font-size: 14px; font-weight: 700; color: var(--text-main);">Optimized GA Ops</div>
+                    </div>
+                </div>
+                <div class="kpi-mini-card" style="border-color: var(--success);">
+                    <div class="kmc-icon" style="color: var(--success);"><i class="fa-solid fa-chart-line"></i></div>
+                    <div>
+                        <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Strategic Value</div>
+                        <div style="font-size: 14px; font-weight: 700; color: var(--text-main);">Data-Driven Decision</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer"><span>Qavah Group Transformation Plan</span><span>AGUS ZAENAL - Head of HRGA Candidate</span></div>
+    </div>
+
+    <!-- SLIDE 9: CTA -->
+    <div class="slide-wrapper" style="background: #F4F5F7;">
+        <div class="top-bar"></div>
+        <div class="slide-content cta-wrapper">
+            <div class="cta-box">
+                <i class="fa-solid fa-rocket" style="font-size: 60px; color: var(--primary); margin-bottom: 30px;"></i>
+                <h2 style="font-size: 42px; font-weight: 800; color: var(--primary); margin-bottom: 20px;">Siap untuk Eksekusi</h2>
+                <p style="font-size: 18px; color: var(--text-muted); line-height: 1.6; margin-bottom: 30px;">
+                    Rencana ini dirancang untuk memastikan <strong>Qavah Group</strong> memiliki fondasi HR yang kuat, tata kelola yang bersih, dan tim yang siap mendukung target bisnis perusahaan.
+                </p>
+                <div class="btn-cta">MULAI TRANSFORMASI</div>
+            </div>
+        </div>
+        <div class="slide-footer"><span>Qavah Group Transformation Plan</span><span>AGUS ZAENAL - Head of HRGA Candidate</span></div>
+    </div>
+
+    <!-- NAVIGATION UI -->
+    <div class="slide-indicator" id="slide-indicator">Slide 1 / 9</div>
+    
+    <div class="nav-controls">
+        <button class="nav-btn" id="prev-btn" title="Previous Slide (Left Arrow)"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-btn" id="next-btn" title="Next Slide (Right Arrow / Space)"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.slide-wrapper');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const indicator = document.getElementById('slide-indicator');
+        
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        function updateSlide(index) {
+            // Remove active class from all
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            // Add active class to current
+            slides[index].classList.add('active');
+            
+            // Update Text
+            indicator.innerText = `Slide ${index + 1} / ${totalSlides}`;
+            
+            // Update Buttons State
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === totalSlides - 1;
+            
+            // Change opacity for visual cue
+            prevBtn.style.opacity = index === 0 ? "0.3" : "1";
+            nextBtn.style.opacity = index === totalSlides - 1 ? "0.3" : "1";
+        }
+
+        function nextSlide() {
+            if (currentIndex < totalSlides - 1) {
+                currentIndex++;
+                updateSlide(currentIndex);
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlide(currentIndex);
+            }
+        }
+
+        // Event Listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault(); // Stop page scroll
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        updateSlide(0);
+    });
+</script>
+
+</body>
+</html>
